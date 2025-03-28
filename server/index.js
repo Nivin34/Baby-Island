@@ -22,11 +22,18 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 
 const app = express()
 
-// Middleware setup
-app.use(cors({
+
+// Global CORS configuration
+const corsOptions = {
+    origin: process.env.FRONTEND_URI || '*', // Allow all origins if FRONTEND_URI is not set
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
     credentials: true,
-    origin: process.env.FRONTEND_URI
-}))
+    optionsSuccessStatus: 200
+}
+// Middleware setup
+app.use(cors(corsOptions))
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan('dev'))
